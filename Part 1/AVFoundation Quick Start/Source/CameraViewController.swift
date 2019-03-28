@@ -25,7 +25,8 @@ class CameraViewController: UIViewController {
         }
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
             if !isAuthorized {
-                self?.show(message: "No Camera Access")
+                self?.show(message: "No Camera Access. Please, enable camera access in Settings",
+                           shouldShowGoToSettingsButton: true)
                 return
             }
             guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
@@ -42,10 +43,19 @@ class CameraViewController: UIViewController {
         view.layer.addSublayer(previewLayer)
     }
 
-    private func show(message: String) {
+    private func show(message: String, shouldShowGoToSettingsButton: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             let alertViewController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
             alertViewController.addAction(UIAlertAction(title: "OK", style: .default))
+
+            if shouldShowGoToSettingsButton {
+                let goToSettingsAction = UIAlertAction(title: "Go to Settings", style: .default) { _ in
+                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                    UIApplication.shared.open(url, options: [:])
+                }
+                alertViewController.addAction(goToSettingsAction)
+            }
+
             self?.present(alertViewController, animated: true)
         }
     }
