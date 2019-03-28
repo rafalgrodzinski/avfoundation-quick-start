@@ -15,29 +15,38 @@ class CameraViewController: UIViewController {
 
         // Setup session
         let session = AVCaptureSession()
-        session.sessionPreset = .hd1920x1080
+        session.sessionPreset = .hd1920x1080 // Use HD resolution instead of the default one (which could be 4K)
         session.startRunning()
 
         // Setup input
         guard let inputDevice = AVCaptureDevice.default(for: .video) else {
+            // This most probably will be cause by running in the simulator
             show(message: "No Camera")
             return
         }
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
+            // Keep in mind that the access popup is shown only once, so if the user declines access for the first time
+            // isAuthorized will always be false (unless the user changes settings manually)
             if !isAuthorized {
                 self?.show(message: "No Camera Access. Please, enable camera access in Settings",
                            shouldShowGoToSettingsButton: true)
                 return
             }
             guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
+                // From my experience this path is caused by lack of access to the camera, therefore in this app
+                // it most probably won't be triggered
                 self?.show(message: "No Camera Access")
                 return
             }
+            // Make sure that the session changs are wrapped in begin/commmit configuration pairs
+            session.beginConfiguration()
             session.addInput(input)
+            session.commitConfiguration()
         }
 
         // Setup preview
         let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        // Make the preview fill the screen
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = view.bounds
         view.layer.addSublayer(previewLayer)
