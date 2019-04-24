@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
+    @IBOutlet var previewImageView: UIImageView!
+    @IBOutlet var closePreviewButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
 
     override func viewDidAppear(_ animated: Bool) {
@@ -51,7 +53,7 @@ class CameraViewController: UIViewController {
         // Make the preview fill the screen
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = view.bounds
-        view.layer.insertSublayer(previewLayer, below: view.layer.sublayers?.last)
+        view.layer.insertSublayer(previewLayer, at: 0)
 
         // Setup output
         session.beginConfiguration()
@@ -86,10 +88,24 @@ class CameraViewController: UIViewController {
         let photoSettings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
+
+    @IBAction private func closePreviewPressed(_ sender: UIButton) {
+        previewImageView.isHidden = true
+        closePreviewButton.isHidden = true
+    }
 }
 
 extension CameraViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let photoData = photo.fileDataRepresentation() else {
+            return
+        }
+        guard let photoImage = UIImage(data: photoData) else {
+            return
+        }
+        previewImageView.image = photoImage
+        previewImageView.isHidden = false
+        closePreviewButton.isHidden = false
     }
 }
 
