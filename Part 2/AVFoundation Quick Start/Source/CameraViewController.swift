@@ -51,7 +51,7 @@ class CameraViewController: UIViewController {
         // Make the preview fill the screen
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = view.bounds
-        view.layer.addSublayer(previewLayer)
+        view.layer.insertSublayer(previewLayer, below: view.layer.sublayers?.last)
 
         // Setup output
         session.beginConfiguration()
@@ -76,6 +76,20 @@ class CameraViewController: UIViewController {
 
             self?.present(alertViewController, animated: true)
         }
+    }
+
+    @IBAction private func capturePhotoPressed(_ sender: UIButton) {
+        guard let photoOutput = photoOutput else {
+            return
+        }
+
+        let photoSettings = AVCapturePhotoSettings()
+        photoOutput.capturePhoto(with: photoSettings, delegate: self)
+    }
+}
+
+extension CameraViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
     }
 }
 
