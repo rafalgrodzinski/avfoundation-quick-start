@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
+    private var photoOutput: AVCapturePhotoOutput?
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -50,6 +52,13 @@ class CameraViewController: UIViewController {
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = view.bounds
         view.layer.addSublayer(previewLayer)
+
+        // Setup output
+        session.beginConfiguration()
+        let photoOutput = AVCapturePhotoOutput()
+        session.addOutput(photoOutput)
+        session.commitConfiguration()
+        self.photoOutput = photoOutput
     }
 
     private func show(message: String, shouldShowGoToSettingsButton: Bool = false) {
