@@ -19,7 +19,7 @@ class CameraViewController: UIViewController {
 
         // Setup session
         let session = AVCaptureSession()
-        session.sessionPreset = .hd1920x1080 // Use HD resolution instead of the default one (which could be 4K)
+        session.sessionPreset = .hd1920x1080 // Use HD resolution preview instead of the default one (which could be 4K)
         session.startRunning()
 
         // Setup input
@@ -58,6 +58,7 @@ class CameraViewController: UIViewController {
         // Setup output
         session.beginConfiguration()
         let photoOutput = AVCapturePhotoOutput()
+        photoOutput.isHighResolutionCaptureEnabled = true // Required for isHighResolutionPhotoEnabled of AVCapturePhotoSettings, [default false]
         session.addOutput(photoOutput)
         session.commitConfiguration()
         self.photoOutput = photoOutput
@@ -86,6 +87,10 @@ class CameraViewController: UIViewController {
         }
 
         let photoSettings = AVCapturePhotoSettings()
+        photoSettings.flashMode = .auto // default .off
+        photoSettings.isAutoStillImageStabilizationEnabled = true // [default true]
+        photoSettings.isAutoDualCameraFusionEnabled = true // [default true]
+        photoSettings.isHighResolutionPhotoEnabled = true // [default false]
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 
