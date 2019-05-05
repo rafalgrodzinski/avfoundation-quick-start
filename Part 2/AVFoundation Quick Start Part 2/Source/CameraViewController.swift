@@ -11,7 +11,9 @@ import AVFoundation
 
 class CameraViewController: UIViewController {
     @IBOutlet var previewImageView: UIImageView!
-    @IBOutlet var closePreviewButton: UIButton!
+    @IBOutlet var mainImageScrollView: UIScrollView!
+    @IBOutlet var closeButton: UIButton!
+    @IBOutlet var showMainImageButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
     private var mainImage: UIImage?
     private var previewImage: UIImage?
@@ -102,7 +104,16 @@ class CameraViewController: UIViewController {
 
     @IBAction private func closePreviewPressed(_ sender: UIButton) {
         previewImageView.isHidden = true
-        closePreviewButton.isHidden = true
+        mainImageScrollView.isHidden = true
+        closeButton.isHidden = true
+        showMainImageButton.isHidden = true
+        for subview in mainImageScrollView.subviews {
+            subview.removeFromSuperview()
+        }
+    }
+
+    @IBAction private func showMainImagePressed(_ sender: UIButton) {
+        mainImageScrollView.isHidden = false
     }
 }
 
@@ -140,7 +151,14 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
 
         previewImageView.image = image
         previewImageView.isHidden = false
-        closePreviewButton.isHidden = false
+        closeButton.isHidden = false
+
+        if let mainImage = mainImage, previewImage != nil {
+            mainImageScrollView.contentSize = mainImage.size
+            let mainImageView = UIImageView(image: mainImage)
+            mainImageScrollView.addSubview(mainImageView)
+            showMainImageButton.isHidden = false
+        }
     }
 }
 
