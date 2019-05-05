@@ -13,6 +13,8 @@ class CameraViewController: UIViewController {
     @IBOutlet var previewImageView: UIImageView!
     @IBOutlet var closePreviewButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
+    private var mainImage: UIImage?
+    private var previewImage: UIImage?
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -91,6 +93,10 @@ class CameraViewController: UIViewController {
         photoSettings.isAutoStillImageStabilizationEnabled = true // [default true]
         photoSettings.isAutoDualCameraFusionEnabled = true // [default true]
         photoSettings.isHighResolutionPhotoEnabled = true // [default false]
+        // Enable preview image gneration
+        if let previewFormat = photoSettings.availablePreviewPhotoPixelFormatTypes.first {
+            photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey: previewFormat] as [String: Any]
+        }
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 
@@ -102,13 +108,37 @@ class CameraViewController: UIViewController {
 
 extension CameraViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        // First, get the main image
         guard let photoData = photo.fileDataRepresentation() else {
             return
         }
-        guard let photoImage = UIImage(data: photoData) else {
+        mainImage = UIImage(data: photoData)
+
+        // Then, deal with the preview
+
+        // Try getting preview photo orientation from metadata
+        var previewPhotoOrientation: CGImagePropertyOrientation?
+        if let orientationNum = photo.metadata[kCGImagePropertyOrientation as String] as? NSNumber {
+            previewPhotoOrientation = CGImagePropertyOrientation(rawValue: orientationNum.uint32Value)
+        }
+
+        // Try getting preview photo
+        if let previewPixelBuffer = photo.previewPixelBuffer {
+            var previewCiImage = CIImage(cvPixelBuffer: previewPixelBuffer)
+            // If we managed to get the oreintation, update the image
+            if let previewPhotoOrientation = previewPhotoOrientation {
+                previewCiImage = previewCiImage.oriented(previewPhotoOrientation)
+            }
+            if let previewCgImage = CIContext().createCGImage(previewCiImage, from: previewCiImage.extent) {
+                previewImage = UIImage(cgImage: previewCgImage)
+            }
+        }
+
+        guard let image = previewImage ?? mainImage else {
             return
         }
-        previewImageView.image = photoImage
+
+        previewImageView.image = image
         previewImageView.isHidden = false
         closePreviewButton.isHidden = false
     }
