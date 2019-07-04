@@ -12,11 +12,11 @@ import AVFoundation
 class CameraViewController: UIViewController {
     @IBOutlet var previewImageView: UIImageView!
     @IBOutlet var mainImageScrollView: UIScrollView!
-    @IBOutlet var closeButton: UIButton!
     @IBOutlet var showMainImageButton: UIButton!
+    @IBOutlet var closeButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
-    private var mainImage: UIImage?
     private var previewImage: UIImage?
+    private var mainImage: UIImage?
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -28,7 +28,7 @@ class CameraViewController: UIViewController {
 
         // Setup input
         guard let inputDevice = AVCaptureDevice.default(for: .video) else {
-            // This most probably will be cause by running in the simulator
+            // This most probably will be caused by running in the simulator (or if the camera is broken)
             show(message: "No Camera")
             return
         }
@@ -41,7 +41,7 @@ class CameraViewController: UIViewController {
                 return
             }
             guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
-                // From my experience this path is caused by lack of access to the camera, therefore in this app
+                // From what I've seen this path is caused by lack of access to the camera, therefore in this app
                 // it most probably won't be triggered
                 self?.show(message: "No Camera Access")
                 return
@@ -62,7 +62,7 @@ class CameraViewController: UIViewController {
         // Setup output
         session.beginConfiguration()
         let photoOutput = AVCapturePhotoOutput()
-        photoOutput.isHighResolutionCaptureEnabled = true // Required for isHighResolutionPhotoEnabled of AVCapturePhotoSettings, [default false]
+        photoOutput.isHighResolutionCaptureEnabled = true // Required for isHighResolutionPhotoEnabled of AVCapturePhotoSettings, default is false
         session.addOutput(photoOutput)
         session.commitConfiguration()
         self.photoOutput = photoOutput
@@ -91,10 +91,10 @@ class CameraViewController: UIViewController {
         }
 
         let photoSettings = AVCapturePhotoSettings()
-        photoSettings.flashMode = .auto // default .off
-        photoSettings.isAutoStillImageStabilizationEnabled = true // [default true]
-        photoSettings.isAutoDualCameraFusionEnabled = true // [default true]
-        photoSettings.isHighResolutionPhotoEnabled = true // [default false]
+        photoSettings.flashMode = .auto // default is .off
+        photoSettings.isAutoStillImageStabilizationEnabled = true // default is true
+        photoSettings.isAutoDualCameraFusionEnabled = true // default is true
+        photoSettings.isHighResolutionPhotoEnabled = true // default is false
         // Enable preview image gneration
         if let previewFormat = photoSettings.availablePreviewPhotoPixelFormatTypes.first {
             photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey: previewFormat] as [String: Any]
@@ -126,14 +126,13 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         mainImage = UIImage(data: photoData)
 
         // Then, deal with the preview
-
-        // Try getting preview photo orientation from metadata
+        // First try getting preview photo orientation from metadata
         var previewPhotoOrientation: CGImagePropertyOrientation?
         if let orientationNum = photo.metadata[kCGImagePropertyOrientation as String] as? NSNumber {
             previewPhotoOrientation = CGImagePropertyOrientation(rawValue: orientationNum.uint32Value)
         }
 
-        // Try getting preview photo
+        // Then try getting the photo preview
         if let previewPixelBuffer = photo.previewPixelBuffer {
             var previewCiImage = CIImage(cvPixelBuffer: previewPixelBuffer)
             // If we managed to get the oreintation, update the image
@@ -145,14 +144,17 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             }
         }
 
+        // Make sure we at least have one image
         guard let image = previewImage ?? mainImage else {
             return
         }
 
+        // If that'sthe case, show it as the preview
         previewImageView.image = image
         previewImageView.isHidden = false
         closeButton.isHidden = false
 
+        // If we have both the main and the preview image, show main image in a scroll view
         if let mainImage = mainImage, previewImage != nil {
             mainImageScrollView.contentSize = mainImage.size
             let mainImageView = UIImageView(image: mainImage)

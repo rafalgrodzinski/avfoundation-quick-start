@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B547E8AA224BED2A00A8DCA1"
-               BuildableName = "AVFoundation Quick Start Part 2.app"
+               BuildableName = "AVFQS Part 2.app"
                BlueprintName = "AVFoundation Quick Start Part 2"
                ReferencedContainer = "container:AVFoundation Quick Start Part 2.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B547E8AA224BED2A00A8DCA1"
-            BuildableName = "AVFoundation Quick Start Part 2.app"
+            BuildableName = "AVFQS Part 2.app"
             BlueprintName = "AVFoundation Quick Start Part 2"
             ReferencedContainer = "container:AVFoundation Quick Start Part 2.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B547E8AA224BED2A00A8DCA1"
-            BuildableName = "AVFoundation Quick Start Part 2.app"
+            BuildableName = "AVFQS Part 2.app"
             BlueprintName = "AVFoundation Quick Start Part 2"
             ReferencedContainer = "container:AVFoundation Quick Start Part 2.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B547E8AA224BED2A00A8DCA1"
-            BuildableName = "AVFoundation Quick Start Part 2.app"
+            BuildableName = "AVFQS Part 2.app"
             BlueprintName = "AVFoundation Quick Start Part 2"
             ReferencedContainer = "container:AVFoundation Quick Start Part 2.xcodeproj">
          </BuildableReference>
