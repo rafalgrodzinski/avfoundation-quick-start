@@ -10,13 +10,16 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
-    @IBOutlet var previewImageView: UIImageView!
-    @IBOutlet var mainImageScrollView: UIScrollView!
-    @IBOutlet var showMainImageButton: UIButton!
-    @IBOutlet var closeButton: UIButton!
+    @IBOutlet private var previewImageView: UIImageView!
+    @IBOutlet private var mainImageView: UIImageView!
+    @IBOutlet private var mainImageViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private var mainImageViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private var mainImageViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private var mainImageViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var mainImageScrollView: UIScrollView!
+    @IBOutlet private var showMainImageButton: UIButton!
+    @IBOutlet private var closeButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
-    private var previewImage: UIImage?
-    private var mainImage: UIImage?
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -103,17 +106,48 @@ class CameraViewController: UIViewController {
     }
 
     @IBAction private func closePreviewPressed(_ sender: UIButton) {
+        // Hide all the additional views
         previewImageView.isHidden = true
         mainImageScrollView.isHidden = true
         closeButton.isHidden = true
         showMainImageButton.isHidden = true
-        for subview in mainImageScrollView.subviews {
-            subview.removeFromSuperview()
-        }
+        // Remove images
+        previewImageView.image = nil
+        mainImageView.image = nil
     }
 
     @IBAction private func showMainImagePressed(_ sender: UIButton) {
         mainImageScrollView.isHidden = false
+    }
+
+    private func showInScrollView(image: UIImage) {
+        // Display the desired image
+        mainImageView.image = image
+        // Calculate the appropriate zoom scale given the image and scroll size
+        let widthScale = mainImageScrollView.bounds.width / image.size.width
+        let heightScale = mainImageScrollView.bounds.height / image.size.height
+        let scale = min(widthScale, heightScale)
+        mainImageScrollView.minimumZoomScale = scale
+        mainImageScrollView.zoomScale = scale
+        // Make sure new image appropriately updated layout
+        view.layoutIfNeeded()
+        updateMainImageViewConstraints()
+    }
+
+    private func updateMainImageViewConstraints() {
+        // Calculcate appropriate offsets so the displayed image is centered in the scroll view
+        var xOffset = (mainImageScrollView.frame.width - mainImageView.frame.width) * 0.5
+        xOffset = max(xOffset, 0.0)
+        mainImageViewLeadingConstraint.constant = xOffset
+        mainImageViewTrailingConstraint.constant = xOffset
+
+        var yOffset = (mainImageScrollView.frame.height - mainImageView.frame.height) * 0.5
+        yOffset = max(yOffset, 0.0)
+        mainImageViewTopConstraint.constant = yOffset
+        mainImageViewBottomConstraint.constant = yOffset
+
+        // Make sure the changes get visible
+        //view.layoutIfNeeded()
     }
 }
 
@@ -123,7 +157,7 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         guard let photoData = photo.fileDataRepresentation() else {
             return
         }
-        mainImage = UIImage(data: photoData)
+        let mainImage = UIImage(data: photoData)
 
         // Then, deal with the preview
         // First try getting preview photo orientation from metadata
@@ -133,6 +167,7 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         }
 
         // Then try getting the photo preview
+        var previewImage: UIImage?
         if let previewPixelBuffer = photo.previewPixelBuffer {
             var previewCiImage = CIImage(cvPixelBuffer: previewPixelBuffer)
             // If we managed to get the oreintation, update the image
@@ -149,18 +184,26 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             return
         }
 
-        // If that'sthe case, show it as the preview
+        // If that's the case, show it as the preview
         previewImageView.image = image
         previewImageView.isHidden = false
         closeButton.isHidden = false
 
         // If we have both the main and the preview image, show main image in a scroll view
         if let mainImage = mainImage, previewImage != nil {
-            mainImageScrollView.contentSize = mainImage.size
-            let mainImageView = UIImageView(image: mainImage)
-            mainImageScrollView.addSubview(mainImageView)
+            showInScrollView(image: mainImage)
             showMainImageButton.isHidden = false
         }
     }
 }
 
+extension CameraViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return mainImageView
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        // Make sure the image in the scroll view is centered after each zoom action
+        updateMainImageViewConstraints()
+    }
+}

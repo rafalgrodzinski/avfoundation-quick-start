@@ -46,7 +46,21 @@
                             </button>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="63K-rp-5Rz">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="1l1-M2-Neg">
+                                        <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="1l1-M2-Neg" firstAttribute="leading" secondItem="63K-rp-5Rz" secondAttribute="leading" id="5bY-Li-Le1"/>
+                                    <constraint firstAttribute="bottom" secondItem="1l1-M2-Neg" secondAttribute="bottom" id="WLQ-4a-X8x"/>
+                                    <constraint firstItem="1l1-M2-Neg" firstAttribute="top" secondItem="63K-rp-5Rz" secondAttribute="top" id="cOe-th-0dP"/>
+                                    <constraint firstAttribute="trailing" secondItem="1l1-M2-Neg" secondAttribute="trailing" id="qZ6-lu-77S"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="P8H-69-d3b"/>
+                                </connections>
                             </scrollView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g6y-2X-yzC" userLabel="Close Button">
                                 <rect key="frame" x="335" y="64" width="59" height="38"/>
@@ -82,6 +96,11 @@
                     <connections>
                         <outlet property="closeButton" destination="g6y-2X-yzC" id="Bui-Ys-eCn"/>
                         <outlet property="mainImageScrollView" destination="63K-rp-5Rz" id="dWB-3e-BPA"/>
+                        <outlet property="mainImageView" destination="1l1-M2-Neg" id="g0B-M2-pO4"/>
+                        <outlet property="mainImageViewBottomConstraint" destination="WLQ-4a-X8x" id="Sgz-IQ-4hy"/>
+                        <outlet property="mainImageViewLeadingConstraint" destination="5bY-Li-Le1" id="5er-fg-4X5"/>
+                        <outlet property="mainImageViewTopConstraint" destination="cOe-th-0dP" id="ACH-aR-SD8"/>
+                        <outlet property="mainImageViewTrailingConstraint" destination="qZ6-lu-77S" id="aMj-G4-Kv1"/>
                         <outlet property="previewImageView" destination="TFX-Uq-d7h" id="xyh-6B-Xvw"/>
                         <outlet property="showMainImageButton" destination="Zfi-vW-tuR" id="ssq-dt-6SL"/>
                     </connections>
@@ -90,4 +109,7 @@
             </objects>
         </scene>
     </scenes>
+    <resources>
+        <image name="Placeholder" width="400" height="400"/>
+    </resources>
 </document>
