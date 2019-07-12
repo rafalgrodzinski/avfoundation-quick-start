@@ -32,16 +32,27 @@
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TFX-Uq-d7h">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zfi-vW-tuR" userLabel="Show Main Image Button">
-                                <rect key="frame" x="119.5" y="768" width="175" height="44"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zfi-vW-tuR" userLabel="Show Main Image Button">
+                                <rect key="frame" x="20" y="774" width="177" height="38"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                 <state key="normal" title="Show Main Image">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showMainImagePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rpK-fu-BCU"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTU-EX-ifI" userLabel="Save Photo Button">
+                                <rect key="frame" x="217" y="774" width="177" height="38"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal" title="Save Photo">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="savePhotoPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5G5-hV-5FU"/>
                                 </connections>
                             </button>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="63K-rp-5Rz">
@@ -76,19 +87,24 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="HTU-EX-ifI" secondAttribute="bottom" constant="50" id="0dg-Wc-vdu"/>
                             <constraint firstAttribute="trailing" secondItem="63K-rp-5Rz" secondAttribute="trailing" id="FMB-aQ-Wj1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Kds-kJ-CJ6" secondAttribute="bottom" constant="50" id="FRN-ig-l3r"/>
+                            <constraint firstItem="Zfi-vW-tuR" firstAttribute="width" secondItem="HTU-EX-ifI" secondAttribute="width" id="Fmp-EO-yOY"/>
                             <constraint firstItem="TFX-Uq-d7h" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="GDU-hw-NfX"/>
                             <constraint firstAttribute="trailing" secondItem="TFX-Uq-d7h" secondAttribute="trailing" id="GJa-NU-QWz"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Zfi-vW-tuR" secondAttribute="bottom" constant="50" id="GsE-QR-ZTq"/>
                             <constraint firstItem="TFX-Uq-d7h" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="GwN-HX-Qm7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Zfi-vW-tuR" secondAttribute="bottom" constant="50" id="IG1-ts-W35"/>
                             <constraint firstItem="63K-rp-5Rz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="J7j-33-7uc"/>
                             <constraint firstItem="63K-rp-5Rz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="MNc-YW-qTZ"/>
-                            <constraint firstItem="Zfi-vW-tuR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PhL-ZV-wgv"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HTU-EX-ifI" secondAttribute="trailing" constant="20" id="U9O-Fu-YTQ"/>
                             <constraint firstAttribute="bottom" secondItem="63K-rp-5Rz" secondAttribute="bottom" id="W0f-QG-cih"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="g6y-2X-yzC" secondAttribute="trailing" constant="20" id="Ww8-5R-1Vh"/>
                             <constraint firstItem="g6y-2X-yzC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="Yzy-lw-g9l"/>
                             <constraint firstItem="Kds-kJ-CJ6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gJe-NT-9UL"/>
+                            <constraint firstItem="Zfi-vW-tuR" firstAttribute="height" secondItem="HTU-EX-ifI" secondAttribute="height" id="hPg-dL-IGJ"/>
+                            <constraint firstItem="Zfi-vW-tuR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="tAi-qB-CET"/>
+                            <constraint firstItem="HTU-EX-ifI" firstAttribute="leading" secondItem="Zfi-vW-tuR" secondAttribute="trailing" constant="20" id="vNV-Ah-hQV"/>
                             <constraint firstAttribute="bottom" secondItem="TFX-Uq-d7h" secondAttribute="bottom" id="ymT-VQ-HA9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -102,11 +118,13 @@
                         <outlet property="mainImageViewTopConstraint" destination="cOe-th-0dP" id="ACH-aR-SD8"/>
                         <outlet property="mainImageViewTrailingConstraint" destination="qZ6-lu-77S" id="aMj-G4-Kv1"/>
                         <outlet property="previewImageView" destination="TFX-Uq-d7h" id="xyh-6B-Xvw"/>
+                        <outlet property="savePhotoButton" destination="HTU-EX-ifI" id="gq4-io-JTg"/>
                         <outlet property="showMainImageButton" destination="Zfi-vW-tuR" id="ssq-dt-6SL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="109.82142857142857"/>
         </scene>
     </scenes>
     <resources>

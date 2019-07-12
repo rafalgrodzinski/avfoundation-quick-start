@@ -12,6 +12,7 @@
 		B547E8AF224BED2A00A8DCA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B547E8AE224BED2A00A8DCA1 /* AppDelegate.swift */; };
 		B547E8B1224BED2A00A8DCA1 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B547E8B0224BED2A00A8DCA1 /* CameraViewController.swift */; };
 		B547E8B6224BED2C00A8DCA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B547E8B5224BED2C00A8DCA1 /* Assets.xcassets */; };
+		B550FC5722D78EF90027C1B7 /* URL+TempFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550FC5622D78EF90027C1B7 /* URL+TempFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		B547E8B0224BED2A00A8DCA1 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		B547E8B5224BED2C00A8DCA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B547E8BA224BED2C00A8DCA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B550FC5622D78EF90027C1B7 /* URL+TempFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+TempFile.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 				B547E8AE224BED2A00A8DCA1 /* AppDelegate.swift */,
 				B51F5468224BED81003766AF /* Main.storyboard */,
 				B547E8B0224BED2A00A8DCA1 /* CameraViewController.swift */,
+				B550FC5622D78EF90027C1B7 /* URL+TempFile.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -161,6 +164,7 @@
 			files = (
 				B547E8B1224BED2A00A8DCA1 /* CameraViewController.swift in Sources */,
 				B547E8AF224BED2A00A8DCA1 /* AppDelegate.swift in Sources */,
+				B550FC5722D78EF90027C1B7 /* URL+TempFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +294,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X7G47FFC9G;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start Part 2/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,7 +311,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X7G47FFC9G;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start Part 2/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

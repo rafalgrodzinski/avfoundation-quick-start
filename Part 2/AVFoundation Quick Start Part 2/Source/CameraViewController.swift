@@ -8,33 +8,32 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
 class CameraViewController: UIViewController {
     @IBOutlet private var previewImageView: UIImageView!
     @IBOutlet private var mainImageView: UIImageView!
+    // The constraints are used for correct placement of the photo in the scroll view
     @IBOutlet private var mainImageViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageScrollView: UIScrollView!
     @IBOutlet private var showMainImageButton: UIButton!
+    @IBOutlet private var savePhotoButton: UIButton!
     @IBOutlet private var closeButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
+    private var photoData: Data?
+    private var videoUrl: URL?
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         // Setup session
         let session = AVCaptureSession()
-        session.sessionPreset = .hd1920x1080 // Use HD resolution preview instead of the default one (which could be 4K)
-        session.startRunning()
+        session.sessionPreset = .photo // Use .photo preset in order for live photo capture to work
 
-        // Setup input
-        guard let inputDevice = AVCaptureDevice.default(for: .video) else {
-            // This most probably will be caused by running in the simulator (or if the camera is broken)
-            show(message: "No Camera")
-            return
-        }
+        // Setup video input
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
             // Keep in mind that the access popup is shown only once, so if the user declines access for the first time
             // isAuthorized will always be false (unless the user changes settings manually)
@@ -43,16 +42,48 @@ class CameraViewController: UIViewController {
                            shouldShowGoToSettingsButton: true)
                 return
             }
+
+            guard let inputDevice = AVCaptureDevice.default(for: .video) else {
+                // This most probably will be caused by running in the simulator (or if the camera is broken)
+                self?.show(message: "No Video Device")
+                return
+            }
+
             guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
                 // From what I've seen this path is caused by lack of access to the camera, therefore in this app
                 // it most probably won't be triggered
-                self?.show(message: "No Camera Access")
+                self?.show(message: "No Camera Input Device")
                 return
             }
+
             // Make sure that the session changs are wrapped in begin/commmit configuration pairs
             session.beginConfiguration()
             session.addInput(input)
             session.commitConfiguration()
+        }
+
+        // Since live photos can also contain audio, we request access to the microphone
+        guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
+            show(message: "No Audio Device")
+            return
+        }
+        AVCaptureDevice.requestAccess(for: .audio) { [weak self] isAuthorized in
+            if !isAuthorized {
+                self?.show(message: "No Microphone Access. Please, enable microphone access in Settings",
+                           shouldShowGoToSettingsButton: true)
+                self?.setupPhotoOutputAndStartSession(session)
+                return
+            }
+            guard let audioInput = try? AVCaptureDeviceInput(device: audioDevice) else {
+                self?.show(message: "No Audio Input Device")
+                return
+            }
+
+            session.beginConfiguration()
+            session.addInput(audioInput)
+            session.commitConfiguration()
+
+            self?.setupPhotoOutputAndStartSession(session)
         }
 
         // Setup preview
@@ -61,14 +92,22 @@ class CameraViewController: UIViewController {
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = view.bounds
         view.layer.insertSublayer(previewLayer, at: 0)
+    }
 
+    private func setupPhotoOutputAndStartSession(_ session: AVCaptureSession) {
         // Setup output
         session.beginConfiguration()
         let photoOutput = AVCapturePhotoOutput()
         photoOutput.isHighResolutionCaptureEnabled = true // Required for isHighResolutionPhotoEnabled of AVCapturePhotoSettings, default is false
         session.addOutput(photoOutput)
-        session.commitConfiguration()
+        // Required for live photo capture, default is false
+        // Must be done after adding AVCapturePhotoOutput ot the session
+        if photoOutput.isLivePhotoCaptureSupported {
+            photoOutput.isLivePhotoCaptureEnabled = true
+        }
         self.photoOutput = photoOutput
+        session.commitConfiguration()
+        session.startRunning() // Start session only once isLivePhotoCaptureEnabled is set to true
     }
 
     private func show(message: String, shouldShowGoToSettingsButton: Bool = false) {
@@ -98,10 +137,21 @@ class CameraViewController: UIViewController {
         photoSettings.isAutoStillImageStabilizationEnabled = true // default is true
         photoSettings.isAutoDualCameraFusionEnabled = true // default is true
         photoSettings.isHighResolutionPhotoEnabled = true // default is false
+
         // Enable preview image gneration
         if let previewFormat = photoSettings.availablePreviewPhotoPixelFormatTypes.first {
             photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey: previewFormat] as [String: Any]
         }
+
+        // Enable live photo
+        if photoOutput.isLivePhotoCaptureEnabled {
+            photoSettings.livePhotoMovieFileURL = URL.tempFile(withFileExtension: "mov")
+            // Select first of the available video codecs (optional)
+            if let livePhotoFormat = photoOutput.availableLivePhotoVideoCodecTypes.first {
+                photoSettings.livePhotoVideoCodecType = livePhotoFormat
+            }
+        }
+
         photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 
@@ -111,6 +161,7 @@ class CameraViewController: UIViewController {
         mainImageScrollView.isHidden = true
         closeButton.isHidden = true
         showMainImageButton.isHidden = true
+        savePhotoButton.isHidden = true
         // Remove images
         previewImageView.image = nil
         mainImageView.image = nil
@@ -118,6 +169,13 @@ class CameraViewController: UIViewController {
 
     @IBAction private func showMainImagePressed(_ sender: UIButton) {
         mainImageScrollView.isHidden = false
+    }
+
+    @IBAction private func savePhotoPressed(_ sender: UIButton) {
+        guard let photoData = photoData else {
+            return
+        }
+        saveToPhotosLibrary(photoData: photoData, videoUrl: videoUrl)
     }
 
     private func showInScrollView(image: UIImage) {
@@ -145,21 +203,47 @@ class CameraViewController: UIViewController {
         yOffset = max(yOffset, 0.0)
         mainImageViewTopConstraint.constant = yOffset
         mainImageViewBottomConstraint.constant = yOffset
+    }
 
-        // Make sure the changes get visible
-        //view.layoutIfNeeded()
+    private func saveToPhotosLibrary(photoData: Data, videoUrl: URL?) {
+        PHPhotoLibrary.requestAuthorization { [weak self] (status: PHAuthorizationStatus) in
+            // Make sure the user has granted access to the photo library
+            guard status == .authorized else {
+                self?.show(message: "No Photo Library Access. Please, enable photo library access in Settings",
+                           shouldShowGoToSettingsButton: true)
+                return
+            }
+
+            PHPhotoLibrary.shared().performChanges({
+                let creationRequest = PHAssetCreationRequest.forAsset()
+                // Add captured photo
+                creationRequest.addResource(with: .photo, data: photoData, options: nil)
+                // Add captured live photo's video file
+                if let videoUrl = videoUrl {
+                    creationRequest.addResource(with: .pairedVideo, fileURL: videoUrl, options: nil)
+                }
+            }, completionHandler: { [weak self] (isSuccessful: Bool, error: Error?) in
+                if let error = error {
+                    self?.show(message: error.localizedDescription)
+                } else {
+                    // Inform the user that the save to photo library has succeeded
+                    let message = videoUrl != nil ? "Live Photo Saved" : "Photo Saved"
+                    self?.show(message: message)
+                }
+            })
+        }
     }
 }
 
 extension CameraViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        // First, get the main image
+        // Get the main image
         guard let photoData = photo.fileDataRepresentation() else {
             return
         }
         let mainImage = UIImage(data: photoData)
 
-        // Then, deal with the preview
+        // Get the preview
         // First try getting preview photo orientation from metadata
         var previewPhotoOrientation: CGImagePropertyOrientation?
         if let orientationNum = photo.metadata[kCGImagePropertyOrientation as String] as? NSNumber {
@@ -184,6 +268,12 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             return
         }
 
+        // Keep photo data and enable the save button (if we're not using live photo capture)
+        self.photoData = photoData
+        if !(photoOutput?.isLivePhotoCaptureEnabled ?? false) {
+            savePhotoButton.isHidden = false
+        }
+
         // If that's the case, show it as the preview
         previewImageView.image = image
         previewImageView.isHidden = false
@@ -194,6 +284,12 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             showInScrollView(image: mainImage)
             showMainImageButton.isHidden = false
         }
+    }
+
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingLivePhotoToMovieFileAt outputFileURL: URL,
+                     duration: CMTime, photoDisplayTime: CMTime, resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
+        videoUrl = outputFileURL
+        savePhotoButton.isHidden = false
     }
 }
 
