@@ -18,8 +18,8 @@ class CameraViewController: UIViewController {
     @IBOutlet private var mainImageViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private var mainImageViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private var mainImageScrollView: UIScrollView!
-    @IBOutlet private var showMainImageButton: UIButton!
+    @IBOutlet private var mainPhotoScrollView: UIScrollView!
+    @IBOutlet private var showMainPhotoButton: UIButton!
     @IBOutlet private var savePhotoButton: UIButton!
     @IBOutlet private var closeButton: UIButton!
     private var photoOutput: AVCapturePhotoOutput?
@@ -33,49 +33,74 @@ class CameraViewController: UIViewController {
         let session = AVCaptureSession()
         session.sessionPreset = .photo // Use .photo preset in order for live photo capture to work
 
-        // Setup video input
+        // Setup camera preview
+        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        // Make the preview fill the screen
+        previewLayer.videoGravity = .resizeAspectFill
+        previewLayer.frame = view.bounds
+        view.layer.insertSublayer(previewLayer, at: 0)
+
+        setupVideoInput(for: session) { [weak self] in
+            self?.setupAudioInput(for: session) {
+                self?.setupPhotoOutputAndStartSession(session)
+            }
+        }
+    }
+
+    private func setupVideoInput(for session: AVCaptureSession, completedCallback: @escaping () -> Void) {
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
             // Keep in mind that the access popup is shown only once, so if the user declines access for the first time
             // isAuthorized will always be false (unless the user changes settings manually)
             if !isAuthorized {
                 self?.show(message: "No Camera Access. Please, enable camera access in Settings",
                            shouldShowGoToSettingsButton: true)
+                completedCallback()
                 return
             }
 
-            guard let inputDevice = AVCaptureDevice.default(for: .video) else {
+            guard let videoDevice = AVCaptureDevice.default(for: .video) else {
                 // This most probably will be caused by running in the simulator (or if the camera is broken)
                 self?.show(message: "No Video Device")
+                completedCallback()
                 return
             }
 
-            guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
+            guard let videoInput = try? AVCaptureDeviceInput(device: videoDevice) else {
                 // From what I've seen this path is caused by lack of access to the camera, therefore in this app
                 // it most probably won't be triggered
                 self?.show(message: "No Camera Input Device")
+                completedCallback()
                 return
             }
 
             // Make sure that the session changs are wrapped in begin/commmit configuration pairs
             session.beginConfiguration()
-            session.addInput(input)
+            session.addInput(videoInput)
             session.commitConfiguration()
-        }
 
-        // Since live photos can also contain audio, we request access to the microphone
-        guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
-            show(message: "No Audio Device")
-            return
+            completedCallback()
         }
+    }
+
+    private func setupAudioInput(for session: AVCaptureSession, completedCallback: @escaping () -> Void) {
+        // Since live photos can also contain audio, we request access to the microphone
         AVCaptureDevice.requestAccess(for: .audio) { [weak self] isAuthorized in
             if !isAuthorized {
                 self?.show(message: "No Microphone Access. Please, enable microphone access in Settings",
                            shouldShowGoToSettingsButton: true)
-                self?.setupPhotoOutputAndStartSession(session)
+                completedCallback()
                 return
             }
+
+            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
+                self?.show(message: "No Audio Device")
+                completedCallback()
+                return
+            }
+
             guard let audioInput = try? AVCaptureDeviceInput(device: audioDevice) else {
                 self?.show(message: "No Audio Input Device")
+                completedCallback()
                 return
             }
 
@@ -83,15 +108,8 @@ class CameraViewController: UIViewController {
             session.addInput(audioInput)
             session.commitConfiguration()
 
-            self?.setupPhotoOutputAndStartSession(session)
+            completedCallback()
         }
-
-        // Setup preview
-        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        // Make the preview fill the screen
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = view.bounds
-        view.layer.insertSublayer(previewLayer, at: 0)
     }
 
     private func setupPhotoOutputAndStartSession(_ session: AVCaptureSession) {
@@ -158,17 +176,17 @@ class CameraViewController: UIViewController {
     @IBAction private func closePreviewPressed(_ sender: UIButton) {
         // Hide all the additional views
         previewImageView.isHidden = true
-        mainImageScrollView.isHidden = true
+        mainPhotoScrollView.isHidden = true
         closeButton.isHidden = true
-        showMainImageButton.isHidden = true
+        showMainPhotoButton.isHidden = true
         savePhotoButton.isHidden = true
         // Remove images
         previewImageView.image = nil
         mainImageView.image = nil
     }
 
-    @IBAction private func showMainImagePressed(_ sender: UIButton) {
-        mainImageScrollView.isHidden = false
+    @IBAction private func showMainPhotoPressed(_ sender: UIButton) {
+        mainPhotoScrollView.isHidden = false
     }
 
     @IBAction private func savePhotoPressed(_ sender: UIButton) {
@@ -182,11 +200,11 @@ class CameraViewController: UIViewController {
         // Display the desired image
         mainImageView.image = image
         // Calculate the appropriate zoom scale given the image and scroll size
-        let widthScale = mainImageScrollView.bounds.width / image.size.width
-        let heightScale = mainImageScrollView.bounds.height / image.size.height
+        let widthScale = mainPhotoScrollView.bounds.width / image.size.width
+        let heightScale = mainPhotoScrollView.bounds.height / image.size.height
         let scale = min(widthScale, heightScale)
-        mainImageScrollView.minimumZoomScale = scale
-        mainImageScrollView.zoomScale = scale
+        mainPhotoScrollView.minimumZoomScale = scale
+        mainPhotoScrollView.zoomScale = scale
         // Make sure new image appropriately updated layout
         view.layoutIfNeeded()
         updateMainImageViewConstraints()
@@ -194,12 +212,12 @@ class CameraViewController: UIViewController {
 
     private func updateMainImageViewConstraints() {
         // Calculcate appropriate offsets so the displayed image is centered in the scroll view
-        var xOffset = (mainImageScrollView.frame.width - mainImageView.frame.width) * 0.5
+        var xOffset = (mainPhotoScrollView.frame.width - mainImageView.frame.width) * 0.5
         xOffset = max(xOffset, 0.0)
         mainImageViewLeadingConstraint.constant = xOffset
         mainImageViewTrailingConstraint.constant = xOffset
 
-        var yOffset = (mainImageScrollView.frame.height - mainImageView.frame.height) * 0.5
+        var yOffset = (mainPhotoScrollView.frame.height - mainImageView.frame.height) * 0.5
         yOffset = max(yOffset, 0.0)
         mainImageViewTopConstraint.constant = yOffset
         mainImageViewBottomConstraint.constant = yOffset
@@ -282,7 +300,7 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         // If we have both the main and the preview image, show main image in a scroll view
         if let mainImage = mainImage, previewImage != nil {
             showInScrollView(image: mainImage)
-            showMainImageButton.isHidden = false
+            showMainPhotoButton.isHidden = false
         }
     }
 

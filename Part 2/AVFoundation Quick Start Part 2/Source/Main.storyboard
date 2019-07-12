@@ -32,7 +32,7 @@
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TFX-Uq-d7h">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zfi-vW-tuR" userLabel="Show Main Image Button">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zfi-vW-tuR" userLabel="Show Main Photo Button">
                                 <rect key="frame" x="20" y="774" width="177" height="38"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -41,7 +41,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="showMainImagePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rpK-fu-BCU"/>
+                                    <action selector="showMainPhotoPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iv5-2j-iFC"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTU-EX-ifI" userLabel="Save Photo Button">
@@ -55,7 +55,7 @@
                                     <action selector="savePhotoPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5G5-hV-5FU"/>
                                 </connections>
                             </button>
-                            <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="63K-rp-5Rz">
+                            <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="63K-rp-5Rz" userLabel="Main Photo Scroll View">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="1l1-M2-Neg">
@@ -111,15 +111,15 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="g6y-2X-yzC" id="Bui-Ys-eCn"/>
-                        <outlet property="mainImageScrollView" destination="63K-rp-5Rz" id="dWB-3e-BPA"/>
                         <outlet property="mainImageView" destination="1l1-M2-Neg" id="g0B-M2-pO4"/>
                         <outlet property="mainImageViewBottomConstraint" destination="WLQ-4a-X8x" id="Sgz-IQ-4hy"/>
                         <outlet property="mainImageViewLeadingConstraint" destination="5bY-Li-Le1" id="5er-fg-4X5"/>
                         <outlet property="mainImageViewTopConstraint" destination="cOe-th-0dP" id="ACH-aR-SD8"/>
                         <outlet property="mainImageViewTrailingConstraint" destination="qZ6-lu-77S" id="aMj-G4-Kv1"/>
+                        <outlet property="mainPhotoScrollView" destination="63K-rp-5Rz" id="OLf-uT-kyU"/>
                         <outlet property="previewImageView" destination="TFX-Uq-d7h" id="xyh-6B-Xvw"/>
                         <outlet property="savePhotoButton" destination="HTU-EX-ifI" id="gq4-io-JTg"/>
-                        <outlet property="showMainImageButton" destination="Zfi-vW-tuR" id="ssq-dt-6SL"/>
+                        <outlet property="showMainPhotoButton" destination="Zfi-vW-tuR" id="wVv-mh-V9g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
