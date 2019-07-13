@@ -19,11 +19,12 @@ class CameraViewController: UIViewController {
         session.startRunning()
 
         // Setup input
-        guard let inputDevice = AVCaptureDevice.default(for: .video) else {
+        guard let videoDevice = AVCaptureDevice.default(for: .video) else {
             // This most probably will be cause by running in the simulator
-            show(message: "No Camera")
+            show(message: "No Video Capture Device")
             return
         }
+
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
             // Keep in mind that the access popup is shown only once, so if the user declines access for the first time
             // isAuthorized will always be false (unless the user changes settings manually)
@@ -32,15 +33,15 @@ class CameraViewController: UIViewController {
                            shouldShowGoToSettingsButton: true)
                 return
             }
-            guard let input = try? AVCaptureDeviceInput(device: inputDevice) else {
+            guard let videoInput = try? AVCaptureDeviceInput(device: videoDevice) else {
                 // From my experience this path is caused by lack of access to the camera, therefore in this app
                 // it most probably won't be triggered
-                self?.show(message: "No Camera Access")
+                self?.show(message: "No Video Input Device")
                 return
             }
             // Make sure that the session changs are wrapped in begin/commmit configuration pairs
             session.beginConfiguration()
-            session.addInput(input)
+            session.addInput(videoInput)
             session.commitConfiguration()
         }
 

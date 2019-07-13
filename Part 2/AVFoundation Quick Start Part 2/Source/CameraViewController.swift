@@ -48,6 +48,13 @@ class CameraViewController: UIViewController {
     }
 
     private func setupVideoInput(for session: AVCaptureSession, completedCallback: @escaping () -> Void) {
+        guard let videoDevice = AVCaptureDevice.default(for: .video) else {
+            // This most probably will be caused by running in the simulator (or if the camera is broken)
+            show(message: "No Video Capture Device")
+            completedCallback()
+            return
+        }
+
         AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
             // Keep in mind that the access popup is shown only once, so if the user declines access for the first time
             // isAuthorized will always be false (unless the user changes settings manually)
@@ -58,17 +65,10 @@ class CameraViewController: UIViewController {
                 return
             }
 
-            guard let videoDevice = AVCaptureDevice.default(for: .video) else {
-                // This most probably will be caused by running in the simulator (or if the camera is broken)
-                self?.show(message: "No Video Device")
-                completedCallback()
-                return
-            }
-
             guard let videoInput = try? AVCaptureDeviceInput(device: videoDevice) else {
                 // From what I've seen this path is caused by lack of access to the camera, therefore in this app
                 // it most probably won't be triggered
-                self?.show(message: "No Camera Input Device")
+                self?.show(message: "No Video Input Device")
                 completedCallback()
                 return
             }
@@ -83,17 +83,17 @@ class CameraViewController: UIViewController {
     }
 
     private func setupAudioInput(for session: AVCaptureSession, completedCallback: @escaping () -> Void) {
+        guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
+            show(message: "No Audio Capture Device")
+            completedCallback()
+            return
+        }
+
         // Since live photos can also contain audio, we request access to the microphone
         AVCaptureDevice.requestAccess(for: .audio) { [weak self] isAuthorized in
             if !isAuthorized {
                 self?.show(message: "No Microphone Access. Please, enable microphone access in Settings",
                            shouldShowGoToSettingsButton: true)
-                completedCallback()
-                return
-            }
-
-            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
-                self?.show(message: "No Audio Device")
                 completedCallback()
                 return
             }
