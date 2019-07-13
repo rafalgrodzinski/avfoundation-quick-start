@@ -17,7 +17,7 @@
 /* Begin PBXFileReference section */
 		B51F5468224BED81003766AF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		B51F546B224BED98003766AF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B547E8AB224BED2A00A8DCA1 /* AVFoundation Quick Start.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVFoundation Quick Start.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B547E8AB224BED2A00A8DCA1 /* AVFQS Part 1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVFQS Part 1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B547E8AE224BED2A00A8DCA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B547E8B0224BED2A00A8DCA1 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		B547E8B5224BED2C00A8DCA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 		B547E8A2224BED2A00A8DCA1 = {
 			isa = PBXGroup;
 			children = (
-				B547E8AD224BED2A00A8DCA1 /* AVFoundation Quick Start */,
+				B547E8AD224BED2A00A8DCA1 /* AVFoundation Quick Start Part 1 */,
 				B547E8AC224BED2A00A8DCA1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,27 +73,27 @@
 		B547E8AC224BED2A00A8DCA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B547E8AB224BED2A00A8DCA1 /* AVFoundation Quick Start.app */,
+				B547E8AB224BED2A00A8DCA1 /* AVFQS Part 1.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B547E8AD224BED2A00A8DCA1 /* AVFoundation Quick Start */ = {
+		B547E8AD224BED2A00A8DCA1 /* AVFoundation Quick Start Part 1 */ = {
 			isa = PBXGroup;
 			children = (
 				B51F546D224BEDA2003766AF /* Source */,
 				B51F546E224BEDA6003766AF /* Assets */,
 				B51F546F224BEDAA003766AF /* Supporting Files */,
 			);
-			path = "AVFoundation Quick Start";
+			path = "AVFoundation Quick Start Part 1";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B547E8AA224BED2A00A8DCA1 /* AVFoundation Quick Start */ = {
+		B547E8AA224BED2A00A8DCA1 /* AVFoundation Quick Start Part 1 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B547E8BD224BED2C00A8DCA1 /* Build configuration list for PBXNativeTarget "AVFoundation Quick Start" */;
+			buildConfigurationList = B547E8BD224BED2C00A8DCA1 /* Build configuration list for PBXNativeTarget "AVFoundation Quick Start Part 1" */;
 			buildPhases = (
 				B547E8A7224BED2A00A8DCA1 /* Sources */,
 				B547E8A8224BED2A00A8DCA1 /* Frameworks */,
@@ -103,9 +103,9 @@
 			);
 			dependencies = (
 			);
-			name = "AVFoundation Quick Start";
+			name = "AVFoundation Quick Start Part 1";
 			productName = "AVFoundation Quick Start";
-			productReference = B547E8AB224BED2A00A8DCA1 /* AVFoundation Quick Start.app */;
+			productReference = B547E8AB224BED2A00A8DCA1 /* AVFQS Part 1.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +123,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B547E8A6224BED2A00A8DCA1 /* Build configuration list for PBXProject "AVFoundation Quick Start" */;
+			buildConfigurationList = B547E8A6224BED2A00A8DCA1 /* Build configuration list for PBXProject "AVFoundation Quick Start Part 1" */;
 			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -136,7 +136,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B547E8AA224BED2A00A8DCA1 /* AVFoundation Quick Start */,
+				B547E8AA224BED2A00A8DCA1 /* AVFoundation Quick Start Part 1 */,
 			);
 		};
 /* End PBXProject section */
@@ -290,14 +290,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X7G47FFC9G;
-				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start/Supporting Files/Info.plist";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start Part 1/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.unalignedbyte.AVFoundation-Quick-Start";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unalignedbyte.avfoundation-quick-start-part-1";
+				PRODUCT_NAME = "AVFQS Part 1";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -307,14 +307,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X7G47FFC9G;
-				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start/Supporting Files/Info.plist";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "$(SRCROOT)/AVFoundation Quick Start Part 1/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.unalignedbyte.AVFoundation-Quick-Start";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unalignedbyte.avfoundation-quick-start-part-1";
+				PRODUCT_NAME = "AVFQS Part 1";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -322,7 +322,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B547E8A6224BED2A00A8DCA1 /* Build configuration list for PBXProject "AVFoundation Quick Start" */ = {
+		B547E8A6224BED2A00A8DCA1 /* Build configuration list for PBXProject "AVFoundation Quick Start Part 1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B547E8BB224BED2C00A8DCA1 /* Debug */,
@@ -331,7 +331,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B547E8BD224BED2C00A8DCA1 /* Build configuration list for PBXNativeTarget "AVFoundation Quick Start" */ = {
+		B547E8BD224BED2C00A8DCA1 /* Build configuration list for PBXNativeTarget "AVFoundation Quick Start Part 1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B547E8BE224BED2C00A8DCA1 /* Debug */,
